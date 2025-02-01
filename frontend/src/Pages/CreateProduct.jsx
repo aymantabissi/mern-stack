@@ -1,6 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useProductStore } from '../store/product';
 
 function CreateProduct() {
+    const [newProduct ,setProduct]=useState({
+        name:"",
+        price:"",
+        image:"",
+    })
+  const {createProduct}= useProductStore()
+    const handelAddProduct= async () =>{
+        const {success,message}=await createProduct(newProduct)
+        console.log(success)
+        console.log(message)
+        alert(message);
+
+    }
   return (
     <div className=' flex justify-center items-center py-12'>
       <div className='flex flex-col space-y-8 items-center w-full max-w-md'>
@@ -9,21 +23,31 @@ function CreateProduct() {
           <input 
             className='border border-gray-300 rounded-lg p-3 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
             type="text" 
+            name='name'
+            value={newProduct.name}
+            onChange={(e)=>{setProduct({...newProduct , name:e.target.value})}}
             placeholder='Product Name' 
           />
           <input 
             className='border border-gray-300 rounded-lg p-3 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
             type="number" 
+            name='price'
+            value={newProduct.price}
+            onChange={(e)=>{setProduct({...newProduct , price:e.target.value})}}
             placeholder='Price' 
           />
           <input 
             className='border border-gray-300 rounded-lg p-3 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
             type="text" 
+            name='image'
+            value={newProduct.image}
+            onChange={(e)=>{setProduct({...newProduct , image:e.target.value})}}
             placeholder='Image URL' 
           />
           <input 
             className='bg-blue-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer' 
             type="submit" 
+            onClick={handelAddProduct}
             value="Create Product" 
           />
         </div>
