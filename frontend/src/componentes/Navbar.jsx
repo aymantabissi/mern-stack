@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import { CiMenuFries } from "react-icons/ci";
+import { FaShopify } from "react-icons/fa";
+
 
 function Navbar() {
   const [click, setClick] = useState(false);
@@ -30,8 +32,10 @@ function Navbar() {
   return (
     <nav>
       <div className="h-10vh flex justify-between z-50 text-white lg:py-5 px-20 py-4 flex-1 bg-slate-900 transition">
-        <div className="flex items-center flex-1">
-          <span className="text-3xl font-bold">logo</span>
+        <div className="flex items-center flex-1 space-x-3">
+          <span className="text-3xl font-bold"><FaShopify/></span>
+          <span className="self-center text-2xl font-semibold whitespace-nowrap">At9adaw</span>
+
         </div>
         <div className="lg:flex md:flex flex-1 items-center justify-end font-normal hidden">
           <ul className="flex gap-8 mr-16 text-[18px]">

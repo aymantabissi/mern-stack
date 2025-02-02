@@ -11,7 +11,7 @@ function Home() {
   }, [fetchProduct]);
 
   return (
-    <div className="flex flex-col items-center py-12 bg-gray-100 min-h-screen">
+    <div className="flex flex-col items-center py-12 ">
       <div className="w-full max-w-6xl px-4">
         <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-8">Current Products</h1>
         {products.length > 0 ? (
