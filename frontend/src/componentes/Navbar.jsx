@@ -32,7 +32,7 @@ function Navbar() {
   return (
     <nav>
       <div className="h-10vh flex justify-between z-50 text-white lg:py-5 px-20 py-4 flex-1 bg-slate-900 transition">
-        <div className="flex items-center flex-1 space-x-3">
+        <div className="flex items-center flex-1">
           <span className="text-3xl font-bold"><FaShopify/></span>
           <span className="self-center text-2xl font-semibold whitespace-nowrap">At9adaw</span>
 

@@ -5,6 +5,8 @@ import CreateProduct from './Pages/CreateProduct'
 import Navbar from './componentes/Navbar'
 import { useProductStore } from './store/product'
 import Footer from './componentes/Footer'
+import About from './Pages/About'
+import Contact from './Pages/Contact'
 
 
 function App() {
@@ -16,6 +18,10 @@ function App() {
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/CreateProduct' element={<CreateProduct/>}/>
+        <Route path='/About' element={<About/>}/>
+        <Route path='/Contact' element={<Contact/>}/>
+
+
       </Routes>
 
       <Footer/>

@@ -16,8 +16,9 @@ function CreateProduct() {
 
     }
   return (
-    <div className=' flex justify-center items-center py-12'>
-      <div className='flex flex-col space-y-8 items-center w-full max-w-md'>
+    <div className='dark:bg-neutral-900'>
+    <div className=' flex justify-center items-center py-12 bg-neutral-100 '>
+      <div className='flex flex-col space-y-8 items-center w-full max-w-md dark:bg-neutral-900'>
         <h1 className='text-3xl font-bold text-gray-800'>Create New Product</h1>
         <div className='flex flex-col space-y-6 bg-white p-8 rounded-lg shadow-lg w-full'>
           <input 
@@ -52,6 +53,7 @@ function CreateProduct() {
           />
         </div>
       </div>
+    </div>
     </div>
   );
 }

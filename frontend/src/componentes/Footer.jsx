@@ -1,5 +1,6 @@
 import React from 'react'
 import { FaShopify } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 function Footer() {
   return (
@@ -11,12 +12,16 @@ function Footer() {
             <span className="self-center text-2xl font-semibold whitespace-nowrap">At9adaw</span>
           </a>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-400 sm:mb-0 space-x-3">
-            <li>
-              <a href="#" className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">About</a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">Privacy Policy</a>
-            </li>
+          <Link to="/About">
+              <li className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">
+                About
+              </li>
+            </Link>
+            <Link to="/Contact">
+              <li className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">
+                Contact us
+              </li>
+            </Link>
             <li>
               <a href="#" className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">Licensing</a>
             </li>
