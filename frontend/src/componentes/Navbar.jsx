@@ -24,6 +24,12 @@ function Navbar() {
           <li className="my-4 py-4 border-b border-slate-800 hover:bg-slate-800 hover:rounded">
             CreateProduct
           </li>
+
+        </Link>
+        <Link to="/Login">
+          <li className="my-4 py-4 border-b border-slate-800 hover:bg-slate-800 hover:rounded">
+            Login
+          </li>
         </Link>
       </ul>
     </div>
@@ -47,6 +53,11 @@ function Navbar() {
             <Link to="/CreateProduct">
               <li className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">
                 CreateProduct
+              </li>
+            </Link>
+            <Link to="/Login">
+              <li className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">
+                Login
               </li>
             </Link>
           </ul>

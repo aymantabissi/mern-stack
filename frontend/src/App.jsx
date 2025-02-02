@@ -7,6 +7,8 @@ import { useProductStore } from './store/product'
 import Footer from './componentes/Footer'
 import About from './Pages/About'
 import Contact from './Pages/Contact'
+import Login from './Pages/Login'
+import Register from './Pages/Register'
 
 
 function App() {
@@ -19,6 +21,9 @@ function App() {
         <Route path='/' element={<Home/>}/>
         <Route path='/CreateProduct' element={<CreateProduct/>}/>
         <Route path='/About' element={<About/>}/>
+        <Route path='/Login' element={<Login/>}/>
+        <Route path='/Register' element={<Register/>}/>
+
         <Route path='/Contact' element={<Contact/>}/>
 
 
