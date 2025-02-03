@@ -39,3 +39,19 @@ export const getUsers = async (req, res) => {
       res.status(500).json({ success: false, message: "Erreur serveur" });
     }
   };
+export const login=async(req,res)=>{
+  const {email,password}=req.body
+  Register.findOne({email:email})
+  .then(user=>{
+      if(user){
+          if(user.password=password){
+              res.json("succsses")
+          }else{
+              res.json("password incorrect")
+          }
+      }else{
+          res.json("non comptes existes")
+      }
+  })
+
+}

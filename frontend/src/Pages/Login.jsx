@@ -1,19 +1,50 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Login() {
+   const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+
+
+ const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/api/Login", {
+        email,
+        password
+      });
+
+      console.log("conexxion réussie :", response.data);
+      alert("conexxion réussie !");
+      navigate("/"); // Redirige vers la page de connexion
+
+    } catch (error) {
+      console.error("Erreur lors de l'inscription :", error.response?.data || error.message);
+      alert("Erreur lors de l'inscription, vérifiez les informations.");
+    }
+  };
+    
+      
+
+
+
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-700">Login</h2>
         <p className="text-gray-500 text-center mb-6">Welcome back! Please login to your account.</p>
 
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit}  className="space-y-4">
           <div>
             <label className="block text-gray-600 font-medium">Email</label>
             <input 
               type="email" 
               placeholder="Enter your email" 
+              onChange={(e) => setEmail(e.target.value)}
+
               className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
@@ -23,6 +54,8 @@ function Login() {
             <input 
               type="password" 
               placeholder="Enter your password" 
+              onChange={(e) => setPassword(e.target.value)}
+
               className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
