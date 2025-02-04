@@ -9,6 +9,8 @@ import About from './Pages/About'
 import Contact from './Pages/Contact'
 import Login from './Pages/Login'
 import Register from './Pages/Register'
+import Panier from './Pages/Panier'
+import Details from './Pages/Details'
 
 
 function App() {
@@ -23,7 +25,8 @@ function App() {
         <Route path='/About' element={<About/>}/>
         <Route path='/Login' element={<Login/>}/>
         <Route path='/Register' element={<Register/>}/>
-
+        <Route path='/Panier' element={<Panier/>}/>
+        <Route path='/Details' element={<Details/>}/>
         <Route path='/Contact' element={<Contact/>}/>
 
 
