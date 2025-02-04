@@ -6,25 +6,30 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Home() {
-  const { fetchProduct, products, deleteAllProducts, searchProducts } = useProductStore();
+  const { fetchProduct, products, deleteAllProducts } = useProductStore();
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     fetchProduct();
   }, [fetchProduct]);
 
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchTerm.trim()) {
+        const filtered = products.filter((product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredProducts(filtered);
+      } else {
+        setFilteredProducts([]);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, products]);
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-  };
-
-  const handleSearchSubmit = async (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      await searchProducts(searchTerm); // Call searchProducts with the search term
-      toast.success(`Search completed for "${searchTerm}"`);
-    } else {
-      toast.error("Please enter a search term.");
-    }
   };
 
   const handleDeleteAllProducts = async () => {
@@ -44,35 +49,27 @@ function Home() {
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       <ToastContainer position="top-right" autoClose={3000} />
-      
-      <div className="w-full max-w-7xl mx-auto px-4 py-12">
+
+      <div className="w-full max-w-7xl mx-auto px-6 py-12">
         {/* Title Section */}
-        <h1 className="text-5xl font-extrabold text-gray-900 text-center mb-8">
+        <h1 className="text-5xl font-extrabold text-gray-900 text-center mb-12">
           Découvrez Nos Produits
         </h1>
 
         {/* Search Input */}
-        <div className="text-center mb-8">
-          <form onSubmit={handleSearchSubmit} className="inline-block relative">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="Rechercher un produit..."
-              className="border border-gray-300 rounded-lg p-4 w-80 shadow-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="submit"
-              className="absolute right-0 top-0 bg-blue-600 text-white font-semibold py-4 px-6 rounded-r-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Rechercher
-            </button>
-          </form>
+        <div className="relative mb-8 w-full max-w-md mx-auto">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Rechercher un produit..."
+            className="border border-gray-300 rounded-lg p-4 w-full shadow-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+          />
         </div>
 
-        {/* Delete All Products Button - Only show if more than 1 product */}
+        {/* Delete All Products Button */}
         {products.length > 1 && (
-          <div className="text-center mb-8">
+          <div className="text-center mb-12">
             <button
               onClick={handleDeleteAllProducts}
               className="bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300"
@@ -83,7 +80,13 @@ function Home() {
         )}
 
         {/* Products Grid */}
-        {products.length > 0 ? (
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        ) : products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {products.map((product) => (
               <ProductCard key={product._id} product={product} />
