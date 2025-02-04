@@ -54,3 +54,37 @@ export const deleteProduct= async (req,res)=>{
 
     }
 }
+export const deleteAllProducts = async (req, res) => {
+    try {
+        await Product.deleteMany({}); // This deletes all products
+        res.status(200).json({ success: true, message: "All products deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting all products:", error);
+        res.status(500).json({ success: false, message: "Failed to delete products" });
+    }
+};
+
+export const searchProducts = async (req, res) => {
+    const { search } = req.query; // Retrieve the search term from the query
+
+    if (!search) {
+        return res.status(400).json({ success: false, message: "Search term is required" });
+    }
+
+    try {
+        // Search for products where name contains the search term (case-insensitive)
+        const products = await Product.find({
+            name: { $regex: search, $options: 'i' } // i for case-insensitive
+        });
+
+        if (products.length === 0) {
+            return res.status(404).json({ success: false, message: "No products found" });
+        }
+
+        res.status(200).json({ success: true, data: products });
+    } catch (error) {
+        console.error("Error searching products:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+

@@ -11,6 +11,8 @@ import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Panier from './Pages/Panier'
 import Details from './Pages/Details'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
   return (
     <div >
       <Navbar/>
+      <ToastContainer position="top-right" autoClose={3000} />
 
       <Routes>
         <Route path='/' element={<Home/>}/>

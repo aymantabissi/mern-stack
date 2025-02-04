@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useProductStore } from "../store/product";
+import { toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 function ProductCard({ product }) {
     const { deleteProduct, updateProduct } = useProductStore();
@@ -14,7 +17,7 @@ function ProductCard({ product }) {
         try {
             const { success, message } = await deleteProduct(pid);
             if (success) {
-                alert("Product deleted successfully");
+                toast.success("Product deleted successfully");
             } else {
                 alert(`Failed to delete product: ${message}`);
             }
@@ -42,6 +45,7 @@ function ProductCard({ product }) {
     
 
     return (
+        
         <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl">
             <img
                 src={product.image}

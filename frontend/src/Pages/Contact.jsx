@@ -3,7 +3,7 @@ import React from 'react';
 function Contact() {
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="bg-slate-800 flex justify-center items-center p-10 w-full">
+      <div className="flex justify-center items-center p-10 w-full">
         <h1 className="text-4xl italic font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-orange-500 hover:from-orange-500 hover:to-blue-400 transition duration-500">
           Besoin d'aide ?
         </h1>
@@ -46,7 +46,7 @@ function Contact() {
           </div>
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-md">
+        <div className="bg-white p-8 rounded-lg shadow-md transition-all hover:scale-105 hover:shadow-2xl">
           <h2 className="text-2xl font-bold text-center mb-6 text-blue-600 italic">Envoyez-nous un message</h2>
           <div className="space-y-4">
             <input 
@@ -76,7 +76,7 @@ function Contact() {
 
       <div className="mt-16">
         <h2 className="text-2xl font-bold text-center mb-6 text-orange-500 italic">Notre emplacement</h2>
-        <div className="w-full h-[400px]">
+        <div className="w-full h-[400px] rounded-lg overflow-hidden shadow-lg">
           <iframe 
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1119.169130114922!2d-9.207553505068299!3d32.305865324675075!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xdac217ec53d682d%3A0xccc47a648d807676!2scaf%C3%A9%20lbeldi%20FSY!5e0!3m2!1sar!2sma!4v1738527649699!5m2!1sar!2sma" 
             width="100%" 

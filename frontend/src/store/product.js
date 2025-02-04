@@ -59,7 +59,31 @@ export const useProductStore = create((set) => ({
             console.error("Error updating product:", error);
             return { success: false, message: "An error occurred while updating the product" };
         }
-    }
+    },
+    deleteAllProducts: async () => {
+        try {
+            const res = await fetch("/api/products", {
+                method: "DELETE",
+            });
+            const data = await res.json();
+            if (data.success) {
+                set({ products: [] }); // Clears the product list in the store
+                return { success: true, message: "All products deleted successfully" };
+            } else {
+                return { success: false, message: data.message };
+            }
+        } catch (error) {
+            console.error("Error deleting all products:", error);
+            return { success: false, message: "An error occurred while deleting all products" };
+        }
+    },
+    searchProducts: async (searchTerm) => {
+        const res = await fetch(`/api/products/search?search=${searchTerm}`);
+        const data = await res.json();
+        set({ products: data.data });}
+    
+    
+    
     
 
 }));

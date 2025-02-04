@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { useProductStore } from '../store/product';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom';
+
+
 
 function CreateProduct() {
+  const navigate=useNavigate()
     const [newProduct ,setProduct]=useState({
         name:"",
         price:"",
@@ -12,11 +18,24 @@ function CreateProduct() {
         const {success,message}=await createProduct(newProduct)
         console.log(success)
         console.log(message)
-        alert(message);
+        if(success){
+          toast.success(message);
+          setTimeout(()=>{
+            navigate('/')
 
+
+          },3000)
+      
+
+        }else{
+          toast.error('pls remplir field')
+        }
+        
+       
     }
   return (
     <div className='dark:bg-neutral-900'>
+        <ToastContainer position="top-right" autoClose={3000} />
     <div className=' flex justify-center items-center py-12 bg-neutral-100 '>
       <div className='flex flex-col space-y-8 items-center w-full max-w-md dark:bg-neutral-900'>
         <h1 className='text-3xl font-bold text-gray-800'>Create New Product</h1>
