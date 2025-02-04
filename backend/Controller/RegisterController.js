@@ -1,6 +1,7 @@
 
 import Register from "../models/Register.js"
 import bcrypt from 'bcrypt'
+
 export const registerUser = async (req, res) => {
     try {
       const { name, email, password } = req.body;
@@ -39,19 +40,25 @@ export const getUsers = async (req, res) => {
       res.status(500).json({ success: false, message: "Erreur serveur" });
     }
   };
-export const login=async(req,res)=>{
-  const {email,password}=req.body
-  Register.findOne({email:email})
-  .then(user=>{
-      if(user){
-          if(user.password=password){
-              res.json("succsses")
-          }else{
-              res.json("password incorrect")
-          }
-      }else{
-          res.json("non comptes existes")
+  export const login = async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      const user = await Register.findOne({ email });
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "Aucun compte trouvé avec cet email" });
       }
-  })
-
-}
+  
+      const isMatch = await bcrypt.compare(password, user.password);
+      
+      if (!isMatch) {
+        return res.status(400).json({ success: false, message: "Mot de passe incorrect" });
+      }
+  
+      res.status(200).json({ success: true, message: "Connexion réussie", user });
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error.message);
+      res.status(500).json({ success: false, message: "Erreur serveur" });
+    }
+  };
