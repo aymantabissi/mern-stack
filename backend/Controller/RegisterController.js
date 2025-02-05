@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 
 export const registerUser = async (req, res) => {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password ,role} = req.body;
   
       // Vérifier si tous les champs sont remplis
       if (!name || !email || !password) {

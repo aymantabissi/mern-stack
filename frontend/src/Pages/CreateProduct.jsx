@@ -21,7 +21,7 @@ function CreateProduct() {
         if(success){
           toast.success(message);
           setTimeout(()=>{
-            navigate('/')
+            navigate('/Dashbord')
 
 
           },3000)

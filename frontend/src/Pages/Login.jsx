@@ -3,31 +3,48 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import jwt_decode from "jwt-decode";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); // Change 'name' to 'email'
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!email || !password) {
       toast.error("❌ Veuillez remplir tous les champs !");
       return;
     }
-
+  
     try {
-      await axios.post("http://localhost:5000/api/Login", { email, password });
-
-      toast.success("✅ Connexion réussie !");
-      setTimeout(() => navigate("/"), 2000);
+      // Send request to backend API with email (instead of name)
+      const response = await axios.post("http://localhost:5000/api/login", { email:email , password });
+  
+      // Save token in local storage
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+  
+      // Decode the token to get user role
+      const decodedToken = jwt_decode(token);
+  
+      // Check role and navigate accordingly
+      if (decodedToken.role === "admin") {
+        toast.success("✅ Connexion réussie ! Bienvenue administrateur.");
+        setTimeout(() => navigate("/Dashbord"), 2000);  // Redirect to dashboard if admin
+      } else {
+        toast.success("✅ Connexion réussie !");
+        setTimeout(() => navigate("/"), 2000);  // Redirect to home if user
+      }
     } catch (error) {
+      console.error("Login error:", error);  // Log the full error for better debugging
       let errorMessage =
         error.response?.data?.message || "❌ Erreur lors de la connexion !";
       toast.error(errorMessage);
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -37,7 +54,7 @@ function Login() {
         {/* LOGO */}
         <div className="text-center">
           <img
-            src="https://cdn-icons-png.flaticon.com/512/891/891419.png" // Replace with your brand logo
+            src="https://cdn-icons-png.flaticon.com/512/891/891419.png"
             alt="E-Commerce Logo"
             className="w-16 mx-auto mb-3"
           />
@@ -52,8 +69,8 @@ function Login() {
             <input
               type="email"
               placeholder="Votre email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={email}  // Use 'email' here
+              onChange={(e) => setEmail(e.target.value)} // Update 'email' state
               className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
             />
           </div>

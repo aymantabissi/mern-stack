@@ -8,26 +8,33 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user"); // Default role
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Simple validation
     if (!name || !email || !password) {
       toast.error("❌ Veuillez remplir tous les champs !");
       return;
     }
 
     try {
-      await axios.post("http://localhost:5000/api/register", {
+      // Send request to backend API
+      const response = await axios.post("http://localhost:5000/api/register", {
         name,
         email,
         password,
+        role,
       });
 
+      // Handle successful registration
       toast.success("✅ Inscription réussie !");
       setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
+      // Handle error from backend
+      console.error(error);
       let errorMessage =
         error.response?.data?.message || "❌ Erreur lors de l'inscription !";
       toast.error(errorMessage);
@@ -42,7 +49,7 @@ function Register() {
         {/* LOGO */}
         <div className="text-center">
           <img
-            src="https://cdn-icons-png.flaticon.com/512/891/891419.png" // Replace with your brand logo
+            src="https://cdn-icons-png.flaticon.com/512/891/891419.png"
             alt="E-Commerce Logo"
             className="w-16 mx-auto mb-3"
           />
@@ -83,6 +90,19 @@ function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
+
+          <div>
+            <label className="block text-gray-600 font-medium">Role</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+            >
+              <option value="user">Utilisateur</option>
+              <option value="admin">Administrateur</option>
+              <option value="manager">Manager</option>
+            </select>
           </div>
 
           <button
