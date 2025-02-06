@@ -10,17 +10,19 @@ function Navbar() {
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
 
+  // Update the user role when the component mounts or the token changes
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwt_decode(token);
       setUserRole(decodedToken.role);
     }
-  }, []);
+  }, [localStorage.getItem("token")]); // Dependency on token change
 
+  // Handle logout functionality
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUserRole(null);
+    setUserRole(null); // Immediately update the userRole state
     navigate("/login");
   };
 
@@ -30,7 +32,7 @@ function Navbar() {
 
   return (
     <nav>
-      <div className="h-10vh flex justify-between z-50 text-white lg:py-5 px-20 py-4 flex-1 bg-slate-900 transition">
+      <div className="h-16 flex justify-between items-center z-50 text-white lg:py-5 px-20 py-4 flex-1 bg-slate-900 transition">
         <div className="flex items-center flex-1">
           <span className="text-3xl font-bold">
             <FaShopify />
@@ -55,11 +57,14 @@ function Navbar() {
               </Link>
             )}
 
-            <Link to="/CreateProduct">
-              <li className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">
-                CreateProduct
-              </li>
-            </Link>
+            {/* Only show CreateProduct link for admin */}
+            {userRole === "admin" && (
+              <Link to="/CreateProduct">
+                <li className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer">
+                  CreateProduct
+                </li>
+              </Link>
+            )}
 
             <Link to="/Panier">
               <li className="hover:text-fuchsia-600 transition border-b-2 border-slate-900 hover:border-fuchsia-600 cursor-pointer flex items-center gap-2">
@@ -84,9 +89,53 @@ function Navbar() {
           </ul>
         </div>
 
+        {/* Mobile Menu */}
         <button className="block sm:hidden transition" onClick={handleClick}>
           {click ? <FaTimes /> : <CiMenuFries />}
         </button>
+      </div>
+
+      {/* Mobile Dropdown Menu */}
+      <div className={click ? "block lg:hidden bg-slate-900 text-white" : "hidden"}>
+        <ul className="flex flex-col items-center py-4">
+          <Link to="/">
+            <li className="hover:text-fuchsia-600 py-2">Home</li>
+          </Link>
+
+          {userRole === "admin" && (
+            <Link to="/Dashbord">
+              <li className="hover:text-fuchsia-600 py-2">Dashboard</li>
+            </Link>
+          )}
+
+          {/* Only show CreateProduct link for admin */}
+          {userRole === "admin" && (
+            <Link to="/CreateProduct">
+              <li className="hover:text-fuchsia-600 py-2">CreateProduct</li>
+            </Link>
+          )}
+
+          <Link to="/Panier">
+            <li className="hover:text-fuchsia-600 py-2 flex items-center gap-2">
+              <MdOutlineShoppingCart /> <span>Panier</span>
+            </li>
+          </Link>
+
+          {userRole ? (
+            <button
+              onClick={handleLogout}
+              className="hover:text-red-500 py-2 flex items-center gap-2"
+            >
+              <FaRegUser /> <span>Logout</span>
+            </button>
+          ) : (
+            <Link to="/Login">
+              <li className="hover:text-fuchsia-600 py-2 flex items-center gap-2">
+                <FaRegUser /> <span>Se Connecter</span>
+              </li>
+            </Link>
+          )}
+        </ul>
       </div>
     </nav>
   );
