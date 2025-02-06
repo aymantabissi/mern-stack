@@ -38,31 +38,37 @@ function Home() {
   }, [searchTerm, products]);
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans">
+    <div className="bg-gray-100 min-h-screen font-sans">
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="w-full max-w-7xl mx-auto px-6 py-12">
-        <h1 className="text-5xl font-extrabold text-gray-900 text-center mb-12">Découvrez Nos Produits</h1>
+      
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-center py-20 px-6 shadow-md">
+        <h1 className="text-6xl font-extrabold">Bienvenue à Notre Boutique</h1>
+        <p className="text-lg mt-4 opacity-80">Trouvez vos produits préférés aux meilleurs prix 🚀</p>
+      </div>
 
+      <div className="w-full max-w-7xl mx-auto px-6 py-12">
+        
         {/* Search Input */}
-        <div className="relative mb-8 w-full max-w-md mx-auto">
+        <div className="flex justify-center mb-8">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Rechercher un produit..."
-            className="border border-gray-300 rounded-lg p-4 w-full shadow-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+            placeholder="🔍 Rechercher un produit..."
+            className="border border-gray-300 rounded-full p-4 w-full max-w-lg shadow-md focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-lg"
           />
         </div>
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
               <ProductCard key={product._id} product={product} userRole={userRole} />
             ))}
           </div>
         ) : products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {products.map((product) => (
               <ProductCard key={product._id} product={product} userRole={userRole} />
             ))}

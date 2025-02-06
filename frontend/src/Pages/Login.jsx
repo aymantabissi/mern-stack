@@ -35,7 +35,7 @@ function Login() {
         setTimeout(() => navigate("/Dashbord"), 2000);  // Redirect to dashboard if admin
       } else {
         toast.success("✅ Connexion réussie !");
-        setTimeout(() => navigate("/"), 2000);  // Redirect to home if user
+        setTimeout(() => navigate("/home"), 2000);  // Redirect to home if user
       }
     } catch (error) {
       console.error("Login error:", error);  // Log the full error for better debugging

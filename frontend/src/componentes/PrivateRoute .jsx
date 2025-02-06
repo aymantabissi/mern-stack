@@ -11,10 +11,15 @@ export const PrivateRoute = ({ element, roles, ...rest }) => {
   }
 
   // Decode token to get user role
-  const decodedToken = jwt_decode(token);
-  
-  // If the user doesn't have the required role, redirect
-  if (!roles.includes(decodedToken.role)) {
+  let decodedToken;
+  try {
+    decodedToken = jwt_decode(token);
+  } catch (error) {
+    return <Navigate to="/login" />;
+  }
+
+  // If the user doesn't have the required role, redirect to Home
+  if (roles && !roles.includes(decodedToken.role)) {
     return <Navigate to="/" />;
   }
 
