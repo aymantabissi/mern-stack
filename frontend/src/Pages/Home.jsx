@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useProductStore } from '../store/product';
-import ProductCard from '../componentes/ProductCard';
+import React, { useEffect, useState } from "react";
+import { useProductStore } from "../store/product";
+import ProductCard from "../componentes/ProductCard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import jwt_decode from 'jwt-decode';
+import jwt_decode from "jwt-decode";
 
 function Home() {
   const { fetchProduct, products } = useProductStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [userRole, setUserRole] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwt_decode(token);
       setUserRole(decodedToken.role); // Set role (admin or user)
@@ -20,7 +22,15 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    fetchProduct(); // Fetch products for the Home page
+    setLoading(true);
+    fetchProduct()
+      .then(() => {
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setError("Failed to load products");
+      });
   }, [fetchProduct]);
 
   useEffect(() => {
@@ -40,7 +50,7 @@ function Home() {
   return (
     <div className="bg-gray-100 min-h-screen font-sans">
       <ToastContainer position="top-right" autoClose={3000} />
-      
+
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-center py-20 px-6 shadow-md">
         <h1 className="text-6xl font-extrabold">Bienvenue à Notre Boutique</h1>
@@ -48,7 +58,6 @@ function Home() {
       </div>
 
       <div className="w-full max-w-7xl mx-auto px-6 py-12">
-        
         {/* Search Input */}
         <div className="flex justify-center mb-8">
           <input
@@ -61,7 +70,15 @@ function Home() {
         </div>
 
         {/* Products Grid */}
-        {filteredProducts.length > 0 ? (
+        {loading ? (
+          <div className="text-center mt-12 p-8 bg-white shadow-lg rounded-lg">
+            <p className="text-lg text-gray-600 mb-4">Chargement des produits...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center mt-12 p-8 bg-white shadow-lg rounded-lg">
+            <p className="text-lg text-red-600 mb-4">{error}</p>
+          </div>
+        ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
               <ProductCard key={product._id} product={product} userRole={userRole} />

@@ -80,10 +80,11 @@ export const useProductStore = create((set) => ({
     searchProducts: async (searchTerm) => {
         const res = await fetch(`/api/products/search?search=${searchTerm}`);
         const data = await res.json();
-        set({ products: data.data });}
+        set({ products: data.data });},
     
-    
-    
-    
+
+          
+          
+        
 
 }));
