@@ -1,9 +1,7 @@
-import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Home from './Pages/Home';
 import CreateProduct from './Pages/CreateProduct';
 import Navbar from './componentes/Navbar';
-import { useProductStore } from './store/product';
 import Footer from './componentes/Footer';
 import About from './Pages/About';
 import Contact from './Pages/Contact';
@@ -17,7 +15,6 @@ import Dashbord from '../views/Dashbord';
 import { PrivateRoute } from './componentes/PrivateRoute .jsx';
 
 function App() {
-  const { products } = useProductStore();
 
   return (
     <div>
