@@ -29,7 +29,7 @@ export const getProductById = async (req, res) => {
 export const createProduct=async(req,res)=>{
     const product=req.body; //user will send data
 
-    if(!product.name || !product.price || !product.image){
+    if(!product.name || !product.price || !product.image || !product.description || !product.stock || !product.category){
         return res.status(400).json({success:false,message:"please provide all feilds"})
     }
     const newProduct=new Product(product)

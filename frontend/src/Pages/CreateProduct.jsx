@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useProductStore } from '../store/product';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,7 +28,7 @@ function CreateProduct() {
     if (success) {
       toast.success(message);
       setTimeout(() => {
-        navigate('/Dashboard');
+        navigate('/Dashbord');
       }, 3000);
     } else {
       toast.error('Error creating product');
@@ -36,9 +36,9 @@ function CreateProduct() {
   };
 
   return (
-    <div className="dark:bg-neutral-900 min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="flex flex-col space-y-8 items-center w-full max-w-lg p-6 bg-white dark:bg-neutral-900 rounded-lg shadow-lg">
+      <div className="flex flex-col space-y-8 items-center w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-gray-800">Create New Product</h1>
         
         <div className="flex flex-col space-y-4 w-full">
