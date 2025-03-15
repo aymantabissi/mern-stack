@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useProductStore } from "../store/product";
 import ProductCard from "../componentes/ProductCard";
 import { ToastContainer } from "react-toastify";
@@ -27,7 +27,7 @@ function Home() {
       .then(() => {
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(false);
         setError("Failed to load products");
       });

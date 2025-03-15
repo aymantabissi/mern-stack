@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useCartStore } from "../store/cart";
 import { useProductStore } from "../store/product";
@@ -12,8 +12,8 @@ function ProductCard({ product, userRole }) {
     price: product.price,
     image: product.image,
   });
-  const { addToCart } = useCartStore();
   const location = useLocation();
+  const { addToCart } = useCartStore();
 
   const handleDeleteProduct = async (pid) => {
     try {
@@ -31,7 +31,7 @@ function ProductCard({ product, userRole }) {
 
   const handleUpdateProduct = async (pid, updatedProduct) => {
     try {
-      const response = await updateProduct(pid, updatedProduct); // Pass the updated product
+      const response = await updateProduct(pid, updatedProduct);
       if (response && response.success) {
         toast.success("Product updated successfully");
         setIsModalOpen(false);
@@ -43,7 +43,27 @@ function ProductCard({ product, userRole }) {
       toast.error("An error occurred while updating the product");
     }
   };
-  
+
+  const handleAddToCart = () => {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Check if product exists in cart
+    const existingProduct = cart.find((item) => item._id === product._id);
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+
+    // Update localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Notify the navbar to update cart count
+    window.dispatchEvent(new Event("cartUpdated"));
+
+    // Show notification
+    toast.success("Produit ajouté au panier 🛒");
+  };
 
   return (
     <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl">
@@ -76,15 +96,12 @@ function ProductCard({ product, userRole }) {
             </>
           ) : (
             <>
-              <Link
-                to="/panier"
+              <button
                 className="bg-green-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-600 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
-                onClick={() => addToCart(product)}
-
+                onClick={handleAddToCart}
               >
                 Ajouter au Panier
-              </Link>
-             
+              </button>
             </>
           )}
         </div>
@@ -126,11 +143,11 @@ function ProductCard({ product, userRole }) {
                 Cancel
               </button>
               <button
-  className="bg-blue-500 text-white px-5 py-2 rounded-full shadow-md hover:bg-blue-600 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-  onClick={() => handleUpdateProduct(product._id, updatedProduct)} // Pass updatedProduct
->
-  Update
-</button>
+                className="bg-blue-500 text-white px-5 py-2 rounded-full shadow-md hover:bg-blue-600 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onClick={() => handleUpdateProduct(product._id, updatedProduct)}
+              >
+                Update
+              </button>
             </div>
           </div>
         </div>
