@@ -1,4 +1,3 @@
-import React from 'react';
 import digital from "../assets/digital.jpeg";
 import { MdHighQuality } from "react-icons/md";
 import { TbShoppingCartDollar } from "react-icons/tb";
@@ -26,8 +25,8 @@ function About() {
       <div className='text-center max-w-[1300px] mx-auto p-10'>
         <h1 className='italic font-bold text-3xl text-orange-600 mb-4'>Notre savoir-faire</h1>
         <p className='text-lg text-gray-700'>
-          Conscients que la recherche de grands crus peut s'avérer très délicate pour les amateurs, que ce soit sur Internet,
-          chez des cavistes ou en grande distribution, nous mettons l'accent sur les points suivants, afin de vous satisfaire au mieux.
+          Conscients que la recherche de grands crus peut savérer très délicate pour les amateurs, que ce soit sur Internet,
+          chez des cavistes ou en grande distribution, nous mettons accent sur les points suivants, afin de vous satisfaire au mieux.
         </p>
       </div>
 

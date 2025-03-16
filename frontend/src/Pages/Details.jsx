@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from "react-toastify"; 
 import { FaShoppingCart, FaStar, FaRegStar, FaStarHalfAlt, FaTruck, FaShieldAlt } from "react-icons/fa";

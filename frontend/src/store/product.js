@@ -5,18 +5,27 @@ export const useProductStore = create((set) => ({
     setProducts: (products) => set({ products }),
     createProduct: async (newProduct) => {
         if (!newProduct.name || !newProduct.price || !newProduct.image) {
-            return ({ success: false, message: "please fill in all fields" });
+            return { success: false, message: "Please fill in all fields" };
         }
+    
+        const formData = new FormData();
+        formData.append("name", newProduct.name);
+        formData.append("price", newProduct.price);
+        formData.append("stock", newProduct.stock);
+        formData.append("category", newProduct.category);
+        formData.append("description", newProduct.description);
+        formData.append("image", newProduct.image); // Append image file
+    
         const res = await fetch("/api/products", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json", // Fixed the header here
-            },
-            body: JSON.stringify(newProduct),
+            body: formData, // Send as FormData, not JSON
         });
+    
         const data = await res.json();
+        if (!data.success) return { success: false, message: data.message };
+    
         set((state) => ({ products: [...state.products, data.data] }));
-        return ({ success: true, message: "product created successfully" });
+        return { success: true, message: "Product created successfully" };
     },
     fetchProduct:async ()=>{
         const res=await fetch("/api/products")
