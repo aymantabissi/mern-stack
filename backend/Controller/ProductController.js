@@ -26,23 +26,37 @@ export const getProductById = async (req, res) => {
   };
   
 
-export const createProduct=async(req,res)=>{
-    const product=req.body; //user will send data
-
-    if(!product.name || !product.price || !product.image || !product.description || !product.stock || !product.category){
-        return res.status(400).json({success:false,message:"please provide all feilds"})
+  export const createProduct = async (req, res) => {
+    try {
+      const { name, price, stock, category, description } = req.body;
+      const image = req.file ? `/uploads/${req.file.filename}` : null;
+  
+      // Validation for required fields
+      if (!name || !price || !image) {
+        return res.status(400).json({ success: false, message: "All fields are required" });
+      }
+  
+      // Create the new product with the image path
+      const newProduct = new Product({
+        name,
+        price,
+        stock,
+        category,
+        description,
+        image,
+      });
+  
+      // Save the product to the database
+      await newProduct.save();
+  
+      // Respond with success
+      res.status(201).json({ success: true, message: "Product created", data: newProduct });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
     }
-    const newProduct=new Product(product)
-    try{
-        await newProduct.save()
-        res.status(201).json({success:true , data:newProduct});
-    }catch(error){
-        console.error("error in create product", error.message);
-        res.status(500).json({success:false , message:"server Error"})
+  };
+  
 
-    }
-    
-}
 
 export const updateProduct= async (req,res)=>{
     const {id}=req.params;
