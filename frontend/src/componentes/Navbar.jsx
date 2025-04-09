@@ -26,6 +26,7 @@ function Navbar() {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwt_decode(token);
+      console.log("Decoded Token:", decodedToken); // Debugging
       setUserRole(decodedToken.role);
     }
   }, []);
@@ -63,7 +64,7 @@ function Navbar() {
   return (
     <header className="w-full shadow-md">
       <div className="bg-black text-white text-center py-2 text-sm">
-        Soldes <span>d'été </span> : -50% sur les maillots de bain + livraison express gratuite !{" "}
+        Soldes <span>d`été </span> : -50% sur les maillots de bain + livraison express gratuite !{" "}
         <a href="#" className="font-bold underline">Achetez maintenant</a>
       </div>
 
@@ -74,7 +75,14 @@ function Navbar() {
           <Link to="/" className="hover:text-red-500 transition">Accueil</Link>
           <Link to="/contact" className="hover:text-red-500 transition">Contact</Link>
           <Link to="/about" className="hover:text-red-500 transition">À propos</Link>
-          <Link to="/register" className="hover:text-red-500 transition">S'inscrire</Link>
+          <Link to="/register" className="hover:text-red-500 transition">S`inscrire</Link>
+
+          {userRole === "admin" && (
+            <>
+              <Link to="/Dashbord" className="hover:text-red-500 transition">Dashboard</Link>
+              <Link to="/admin/CreateProduct" className="hover:text-red-500 transition">Créer un produit</Link>
+            </>
+          )}
         </ul>
 
         <div className="flex items-center gap-6">
@@ -121,8 +129,8 @@ function Navbar() {
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2">
-                <Link to="/account" className="flex items-center px-4 py-2 hover:bg-gray-100 transition">
-                  <IoPersonOutline className="mr-3" /> Mon compte
+                <Link to="/Profile" className="flex items-center px-4 py-2 hover:bg-gray-100 transition">
+                  <IoPersonOutline className="mr-3" />User Account
                 </Link>
                 <Link to="/orders" className="flex items-center px-4 py-2 hover:bg-gray-100 transition">
                   <BsBox className="mr-3" /> Mes commandes

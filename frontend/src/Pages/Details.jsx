@@ -2,18 +2,20 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from "react-toastify"; 
-import { FaShoppingCart, FaStar, FaRegStar, FaStarHalfAlt, FaTruck, FaShieldAlt } from "react-icons/fa";
+import { FaShoppingCart, FaStar, FaRegStar, FaStarHalfAlt, FaTruck, FaShieldAlt, FaHeart, FaPlus, FaMinus } from "react-icons/fa";
 
 function Details() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        console.log(response.data); // ✅ Check API response in console
         setProduct(response.data);
       } catch (err) {
         toast.error("Product not found");
@@ -24,7 +26,6 @@ function Details() {
     };
     fetchProduct();
   }, [id]);
-
   if (loading) return <div className="flex justify-center items-center h-screen text-2xl text-gray-700">Loading...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
 
@@ -47,20 +48,23 @@ function Details() {
     <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
       <div className="max-w-6xl w-full bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row">
         
-        {/* Product Image Section */}
-        <div className="w-full md:w-1/2 p-4">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="rounded-lg shadow-md w-full object-cover border border-gray-200"
-          />
-          <div className="mt-4 flex justify-between items-center">
-            <p className="text-gray-600 text-sm">Category: <span className="font-semibold">{product.category}</span></p>
-            <p className={`text-sm font-semibold ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {product.stock > 0 ? "In Stock" : "Out of Stock"}
-            </p>
-          </div>
-        </div>
+        {/* Sidebar for Product Images */}
+        {/* Sidebar for Product Images */}
+<div className="flex flex-col space-y-3 mr-4">
+{product?.images?.length > 0 ? (
+  product.images.map((img, index) => (
+    <img
+      key={index}
+      src={`http://localhost:5000${img}`} // ✅ Ensure correct URL format
+      alt={`Preview ${index + 1}`}
+      className="w-16 h-16 rounded-md border cursor-pointer hover:border-red-500"
+    />
+  ))
+) : (
+  <p className="text-gray-500">No images available</p>
+)}
+</div>
+
 
         {/* Product Details Section */}
         <div className="w-full md:w-1/2 p-6">
@@ -88,16 +92,42 @@ function Details() {
           {/* Product Description */}
           <p className="mt-4 text-gray-600">{product.description}</p>
 
-          {/* Shipping & Secure Payment */}
-          <div className="mt-6">
-            <div className="flex items-center text-sm text-gray-700 space-x-2">
-              <FaTruck className="text-green-500" />
-              <p>Free Delivery in 3-5 Days</p>
-            </div>
-            <div className="flex items-center text-sm text-gray-700 space-x-2 mt-2">
-              <FaShieldAlt className="text-blue-500" />
-              <p>Secure Payment & Buyer Protection</p>
-            </div>
+          {/* Color Selection */}
+          <div className="mt-4 flex items-center space-x-3">
+            <span className="text-gray-600 font-semibold">Colours:</span>
+            <div className="w-6 h-6 rounded-full bg-gray-900 cursor-pointer border-2 border-gray-400"></div>
+            <div className="w-6 h-6 rounded-full bg-blue-500 cursor-pointer border-2 border-gray-400"></div>
+          </div>
+
+          {/* Size Selection */}
+          <div className="mt-4 flex items-center space-x-3">
+            <span className="text-gray-600 font-semibold">Size:</span>
+            {["XS", "S", "M", "L", "XL"].map((size, index) => (
+              <button
+                key={index}
+                className="px-3 py-1 border rounded-md text-gray-600 hover:bg-red-500 hover:text-white transition"
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+
+          {/* Quantity Selector */}
+          <div className="mt-4 flex items-center space-x-3">
+            <span className="text-gray-600 font-semibold">Quantity:</span>
+            <button
+              className="border p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+              onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+            >
+              <FaMinus />
+            </button>
+            <span className="text-lg font-semibold">{quantity}</span>
+            <button
+              className="border p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+              onClick={() => setQuantity(quantity + 1)}
+            >
+              <FaPlus />
+            </button>
           </div>
 
           {/* Action Buttons */}
@@ -109,6 +139,22 @@ function Details() {
               <FaShoppingCart />
               <span>Add to Cart</span>
             </button>
+            <button className="bg-gray-300 text-gray-800 px-6 py-3 rounded-md font-bold flex items-center space-x-2 hover:bg-gray-400 transition duration-300">
+              <FaHeart />
+              <span>Wishlist</span>
+            </button>
+          </div>
+
+          {/* Shipping & Secure Payment */}
+          <div className="mt-6">
+            <div className="flex items-center text-sm text-gray-700 space-x-2">
+              <FaTruck className="text-green-500" />
+              <p>Free Delivery in 3-5 Days</p>
+            </div>
+            <div className="flex items-center text-sm text-gray-700 space-x-2 mt-2">
+              <FaShieldAlt className="text-blue-500" />
+              <p>Secure Payment & Buyer Protection</p>
+            </div>
           </div>
         </div>
       </div>

@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Dashbord from '../views/Dashbord';
 import { PrivateRoute } from './componentes/PrivateRoute .jsx';
+import Profile from './Pages/Profile.jsx';
 
 function App() {
 
@@ -26,12 +27,14 @@ function App() {
         <Route path="/" element={<Navigate to="/home" />} /> {/* Redirect "/" to "/home" */}
         <Route path="/home" element={<Home />} /> {/* Public Home page */}
 
-        <Route path='/CreateProduct' element={<CreateProduct />} />
+        <Route path='/admin/CreateProduct' element={<CreateProduct />} />
         <Route path='/About' element={<About />} />
         <Route path='/Register' element={<Register />} />
         <Route path='/Panier' element={<Panier />} />
         <Route path="/product/:id" element={<Details />} />
         <Route path='/Contact' element={<Contact />} />
+        <Route path='/Profile' element={<Profile />} />
+
 
         {/* Login route */}
         <Route path="/login" element={<Login />} />

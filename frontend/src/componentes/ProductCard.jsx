@@ -7,7 +7,7 @@ function ProductCard({ product, userRole }) {
   const imageUrl = product.image.startsWith("/uploads/")
   ? `http://localhost:5000${product.image}`
   : product.image; 
-  const { deleteProduct, updateProduct } = useProductStore();
+  const { deleteProduct, updateProduct ,fetchProduct} = useProductStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedProduct, setUpdatedProduct] = useState({
     name: product.name,
@@ -62,7 +62,7 @@ function ProductCard({ product, userRole }) {
 
     // Notify the navbar to update cart count
     window.dispatchEvent(new Event("cartUpdated"));
-
+    fetchProduct()
     // Show notification
     toast.success("Produit ajouté au panier 🛒");
   };
