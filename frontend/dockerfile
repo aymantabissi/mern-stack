@@ -1,29 +1,20 @@
-# Step 1: Use an official Node.js image to build the React app (Vite)
-FROM node:18.19.1 AS build
+# Frontend Dockerfile
+FROM node:18
 
-# Step 2: Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Step 3: Copy package.json and package-lock.json
+# Install dependencies
 COPY package*.json ./
-
-# Step 4: Install the frontend dependencies
 RUN npm install
 
-# Step 5: Copy the rest of the frontend code into the container
+# Copy all files
 COPY . .
 
-# Step 6: Build the React app for production using Vite
+# Build the frontend
 RUN npm run build
 
-# Step 7: Serve the React app using an Nginx image
-FROM nginx:alpine
-
-# Step 8: Copy the build folder from the previous image to Nginx's default folder
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Step 9: Expose the port Nginx is running on
-EXPOSE 80
-
-# Step 10: Run Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Serve using a simple static server
+RUN npm install -g serve
+EXPOSE 3000
+CMD ["serve", "-s", "dist"]

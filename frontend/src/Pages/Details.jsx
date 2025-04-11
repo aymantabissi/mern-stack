@@ -10,13 +10,17 @@ function Details() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [mainImage, setMainImage] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/products/${id}`);
-        console.log(response.data); // ✅ Check API response in console
         setProduct(response.data);
+
+        // Set initial main image
+        const defaultImage = response.data.images?.[0] || response.data.image || "";
+        setMainImage(defaultImage);
       } catch (err) {
         toast.error("Product not found");
         setError("Product not found");
@@ -26,10 +30,10 @@ function Details() {
     };
     fetchProduct();
   }, [id]);
+
   if (loading) return <div className="flex justify-center items-center h-screen text-2xl text-gray-700">Loading...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
 
-  // Function to render stars for rating
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -46,37 +50,42 @@ function Details() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
-      <div className="max-w-6xl w-full bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row">
+      <div className="max-w-7xl w-full bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row">
         
-        {/* Sidebar for Product Images */}
-        {/* Sidebar for Product Images */}
-<div className="flex flex-col space-y-3 mr-4">
-{product?.images?.length > 0 ? (
-  product.images.map((img, index) => (
-    <img
-      key={index}
-      src={`http://localhost:5000${img}`} // ✅ Ensure correct URL format
-      alt={`Preview ${index + 1}`}
-      className="w-16 h-16 rounded-md border cursor-pointer hover:border-red-500"
-    />
-  ))
-) : (
-  <p className="text-gray-500">No images available</p>
-)}
-</div>
+        {/* Image Section */}
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+          {/* Thumbnails */}
+          <div className="flex md:flex-col space-x-3 md:space-x-0 md:space-y-3">
+            {(product.images && product.images.length > 0 ? product.images.slice(0, 3) : [product.image]).map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`Thumbnail ${idx}`}
+                className={`w-20 h-20 object-cover border rounded-md cursor-pointer ${mainImage === img ? 'border-red-500' : 'border-gray-300'}`}
+                onClick={() => setMainImage(img)}
+              />
+            ))}
+          </div>
 
+          {/* Main Image */}
+          <div className="flex-1">
+            <img
+              src={mainImage}
+              alt={product.name}
+              className="w-full h-[400px] object-contain rounded-lg border"
+            />
+          </div>
+        </div>
 
         {/* Product Details Section */}
         <div className="w-full md:w-1/2 p-6">
           <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
 
-          {/* Rating and Reviews */}
           <div className="flex items-center space-x-2 mt-2">
             {renderStars(product.rating)}
             <span className="text-gray-500 text-sm">({product.reviews} reviews)</span>
           </div>
 
-          {/* Pricing Section */}
           <div className="mt-4 flex items-center space-x-3">
             {product.discountPrice ? (
               <>
@@ -89,17 +98,14 @@ function Details() {
             )}
           </div>
 
-          {/* Product Description */}
           <p className="mt-4 text-gray-600">{product.description}</p>
 
-          {/* Color Selection */}
           <div className="mt-4 flex items-center space-x-3">
             <span className="text-gray-600 font-semibold">Colours:</span>
             <div className="w-6 h-6 rounded-full bg-gray-900 cursor-pointer border-2 border-gray-400"></div>
             <div className="w-6 h-6 rounded-full bg-blue-500 cursor-pointer border-2 border-gray-400"></div>
           </div>
 
-          {/* Size Selection */}
           <div className="mt-4 flex items-center space-x-3">
             <span className="text-gray-600 font-semibold">Size:</span>
             {["XS", "S", "M", "L", "XL"].map((size, index) => (
@@ -112,7 +118,6 @@ function Details() {
             ))}
           </div>
 
-          {/* Quantity Selector */}
           <div className="mt-4 flex items-center space-x-3">
             <span className="text-gray-600 font-semibold">Quantity:</span>
             <button
@@ -130,7 +135,6 @@ function Details() {
             </button>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex space-x-4 mt-6">
             <button className="bg-orange-500 text-white px-6 py-3 rounded-md font-bold hover:bg-orange-600 transition duration-300">
               Buy Now
@@ -145,7 +149,6 @@ function Details() {
             </button>
           </div>
 
-          {/* Shipping & Secure Payment */}
           <div className="mt-6">
             <div className="flex items-center text-sm text-gray-700 space-x-2">
               <FaTruck className="text-green-500" />

@@ -19,10 +19,11 @@ export const getProductById = async (req, res) => {
     if (!product) return res.status(404).json({ message: "Product not found" });
 
     // Ensure image URL is full path
-    res.json({
-      ...product._doc,
-      image: product.image ? `${req.protocol}://${req.get("host")}/${product.image}` : "",
-    });
+  res.json({
+  ...product._doc,
+  image: product.image ? `${req.protocol}://${req.get("host")}${product.image}` : "",
+});
+console.log(`Image path: ${req.protocol}://${req.get("host")}${product.image}`);
   } catch (error) {
     res.status(500).json({ message: "Error fetching product", error });
   }

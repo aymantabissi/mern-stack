@@ -9,13 +9,16 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user"); // Default role
+  const [age, setAge] = useState(""); // New state for age
+  const [gender,setGender]=useState("");
+  const [country, setCountry] = useState(""); // New state for country
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Simple validation
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role || !age || !country || !gender) {
       toast.error("❌ Veuillez remplir tous les champs !");
       return;
     }
@@ -25,6 +28,9 @@ function Register() {
       const response = await axios.post("http://localhost:5000/api/register", {
         name,
         email,
+        age,
+        gender,
+        country,
         password,
         role,
       });
@@ -54,7 +60,7 @@ function Register() {
             className="w-16 mx-auto mb-3"
           />
           <h2 className="text-3xl font-extrabold text-gray-700">Créer un compte</h2>
-          <p className="text-gray-500">Rejoignez-nous dès aujourd'hui !</p>
+          <p className="text-gray-500">Rejoignez-nous dès aujourd`hui !</p>
         </div>
 
         {/* REGISTER FORM */}
@@ -67,6 +73,40 @@ function Register() {
               className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
               value={name}
               onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-600 font-medium">Âge</label>
+            <input
+              type="number"
+              placeholder="Entrez votre âge"
+              className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600 font-medium">Genre</label>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+            >
+              <option value="">Sélectionnez votre genre</option>
+              <option value="Male">Homme</option>
+              <option value="Female">Femme</option>
+              <option value="Other">Autre</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-gray-600 font-medium">Pays</label>
+            <input
+              type="text"
+              placeholder="Entrez votre pays"
+              className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
             />
           </div>
 
@@ -109,7 +149,7 @@ function Register() {
             type="submit"
             className="w-full p-3 mt-4 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition transform hover:scale-105"
           >
-            S'inscrire
+            S`inscrire
           </button>
         </form>
 
@@ -127,7 +167,7 @@ function Register() {
             alt="Google Logo"
             className="w-5 h-5 mr-2"
           />
-          S'inscrire avec Google
+          S`inscrire avec Google
         </button>
 
         {/* LOGIN LINK */}

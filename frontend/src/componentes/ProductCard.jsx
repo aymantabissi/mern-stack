@@ -3,11 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { useCartStore } from "../store/cart";
 import { useProductStore } from "../store/product";
 import { toast } from "react-toastify";
+
 function ProductCard({ product, userRole }) {
-  const imageUrl = product.image.startsWith("/uploads/")
-  ? `http://localhost:5000${product.image}`
-  : product.image; 
-  const { deleteProduct, updateProduct ,fetchProduct} = useProductStore();
+  // Safely handle image URL
+  const imageUrl = product.image && product.image.startsWith("/uploads/")
+    ? `http://localhost:5000${product.image}`
+    : product.image || "/path/to/default-image.jpg"; // Fallback to a default image if product.image is undefined or empty
+
+  const { deleteProduct, updateProduct, fetchProduct } = useProductStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedProduct, setUpdatedProduct] = useState({
     name: product.name,
@@ -62,7 +65,7 @@ function ProductCard({ product, userRole }) {
 
     // Notify the navbar to update cart count
     window.dispatchEvent(new Event("cartUpdated"));
-    fetchProduct()
+    fetchProduct();
     // Show notification
     toast.success("Produit ajouté au panier 🛒");
   };
@@ -70,8 +73,7 @@ function ProductCard({ product, userRole }) {
   return (
     <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-2xl">
       <Link to={`/product/${product._id}`}>
-      <img src={imageUrl} alt={product.name} className="w-full h-48 object-cover rounded-md" />
-
+        <img src={imageUrl} alt={product.name} className="w-full h-48 object-cover rounded-md" />
       </Link>
       <div className="p-5 text-white">
         <h2 className="text-2xl font-semibold mb-2">{product.name}</h2>

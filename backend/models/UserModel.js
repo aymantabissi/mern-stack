@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      // Validate email format
       match: [/\S+@\S+\.\S+/, "Please use a valid email address"],
     },
     password: {
@@ -26,28 +25,26 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user", // Default role is 'user'
     },
-    // Contact information
-    telephone: {
+    // New fields to add to the schema
+    age: {
+      type: Number,
+      required: true, // Age is required
+    },
+    gender: {
       type: String,
-      required: true,
-      match: [/^\+?[1-9]\d{1,14}$/, "Please use a valid phone number"], // Basic international phone number validation
+      required:true,
+      enum: ["Male", "Female", "Other"], // Define the allowed gender values
+    },
+    country: {
+      type: String,
+      required: true, // Country is required
     },
     shippingAddress: {
       street: {
         type: String,
-        required: true,
-      },
-      city: {
-        type: String,
-        required: true,
       },
       postalCode: {
         type: String,
-        required: true,
-      },
-      country: {
-        type: String,
-        required: true,
       },
     },
   },

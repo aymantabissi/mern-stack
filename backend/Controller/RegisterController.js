@@ -4,10 +4,10 @@ import bcrypt from 'bcrypt'
 
 export const registerUser = async (req, res) => {
     try {
-      const { name, email, password ,role} = req.body;
+      const { name, age,  email, password ,role,country ,gender} = req.body;
   
       // Vérifier si tous les champs sont remplis
-      if (!name || !email || !password) {
+      if (!name || !email || !password || !role || !country  || !age || !gender) {
         return res.status(400).json({ success: false, message: "Veuillez remplir tous les champs" });
       }
   
@@ -22,7 +22,7 @@ export const registerUser = async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, salt);
   
       // Créer un nouvel utilisateur
-      const newUser = new Register({ name, email, password: hashedPassword });
+      const newUser = new Register({ name,role, country,age,gender, email, password: hashedPassword });
   
       await newUser.save();
       res.status(201).json({ success: true, message: "Utilisateur enregistré avec succès" });
