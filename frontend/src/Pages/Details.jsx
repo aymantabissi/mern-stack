@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from "react-toastify"; 
+import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaStar, FaRegStar, FaStarHalfAlt, FaTruck, FaShieldAlt, FaHeart, FaPlus, FaMinus } from "react-icons/fa";
 
 function Details() {
@@ -136,9 +137,11 @@ function Details() {
           </div>
 
           <div className="flex space-x-4 mt-6">
-            <button className="bg-orange-500 text-white px-6 py-3 rounded-md font-bold hover:bg-orange-600 transition duration-300">
-              Buy Now
-            </button>
+          <Link to="/checkout">
+  <button className="bg-orange-500 text-white px-6 py-3 rounded-md font-bold hover:bg-orange-600 transition duration-300">
+    Buy Now
+  </button>
+</Link>
             <button className="bg-blue-500 text-white px-6 py-3 rounded-md font-bold flex items-center space-x-2 hover:bg-blue-600 transition duration-300">
               <FaShoppingCart />
               <span>Add to Cart</span>

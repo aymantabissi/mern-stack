@@ -10,6 +10,8 @@ import Register from './Pages/Register';
 import Panier from './Pages/Panier';
 import Details from './Pages/Details';
 import { ToastContainer } from "react-toastify";
+import Checkout from './Pages/Checkout';
+import Payment from './Pages/Payment';
 import "react-toastify/dist/ReactToastify.css";
 import Dashbord from '../views/Dashbord';
 import { PrivateRoute } from './componentes/PrivateRoute .jsx';
@@ -34,6 +36,8 @@ function App() {
         <Route path="/product/:id" element={<Details />} />
         <Route path='/Contact' element={<Contact />} />
         <Route path='/Profile' element={<Profile />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment" element={<Payment />} />
 
 
         {/* Login route */}
