@@ -11,7 +11,7 @@ import Panier from './Pages/Panier';
 import Details from './Pages/Details';
 import { ToastContainer } from "react-toastify";
 import Checkout from './Pages/Checkout';
-import Payment from './Pages/Payment';
+import Payment from './Pages/payment.jsx';
 import "react-toastify/dist/ReactToastify.css";
 import Dashbord from '../views/Dashbord';
 import { PrivateRoute } from './componentes/PrivateRoute .jsx';
