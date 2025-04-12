@@ -37,7 +37,11 @@ function Panier() {
                 {cart.map((item) => (
                   <tr key={item._id} className="border-t">
                     <td className="p-4 flex items-center">
-                      <img src={item.image} alt={item.name} className="w-16 h-16 rounded-md shadow-md mr-4" />
+                      <img 
+                        src={item.image ? `http://localhost:5000${item.image}` : "http://localhost:5000/uploads/default-image.jpg"} 
+                        alt={item.name} 
+                        className="w-16 h-16 rounded-md shadow-md mr-4" 
+                      />
                       {item.name}
                     </td>
                     <td className="p-4 font-semibold">${item.price}</td>

@@ -13,6 +13,7 @@ function Navbar() {
   const { fetchProduct, products } = useProductStore();
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [userRole, setUserRole] = useState(null);
+  const [userName, setUserName] = useState(""); // Store user name from token
   const [searchTerm, setSearchTerm] = useState(""); // Search state
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { cart } = useCartStore();
@@ -26,9 +27,25 @@ function Navbar() {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwt_decode(token);
-      console.log("Decoded Token:", decodedToken); // Debugging
       setUserRole(decodedToken.role);
+      setUserName(decodedToken.name); // Get user name from the token
     }
+  }, []);
+
+  // Handle clicks outside the dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (event.target.closest(".user-dropdown") === null) {
+        setIsDropdownOpen(false); // Close dropdown when clicked outside
+      }
+    };
+
+    // Adding event listener on mount and removing on unmount
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -58,6 +75,7 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUserRole(null);
+    setUserName(""); // Clear user name after logout
     navigate("/login");
   };
 
@@ -122,15 +140,27 @@ function Navbar() {
             )}
           </Link>
 
-          <div className="relative">
+          <div className="relative user-dropdown">
             <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="text-xl hover:text-red-500">
               <FaRegUser />
             </button>
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2">
+                {/* User info display */}
+                <div className="px-4 py-2 text-center">
+                  <img
+                    src="https://www.w3schools.com/howto/img_avatar.png"
+                    alt="user-avatar"
+                    className="w-12 h-12 rounded-full mx-auto mb-2"
+                  />
+                  <p className="font-bold">{userName}</p>
+                  <p className="text-gray-500 text-sm">name@example.com</p>
+                </div>
+
+                {/* Dropdown options */}
                 <Link to="/Profile" className="flex items-center px-4 py-2 hover:bg-gray-100 transition">
-                  <IoPersonOutline className="mr-3" />User Account
+                  <IoPersonOutline className="mr-3" />Mon compte
                 </Link>
                 <Link to="/orders" className="flex items-center px-4 py-2 hover:bg-gray-100 transition">
                   <BsBox className="mr-3" /> Mes commandes

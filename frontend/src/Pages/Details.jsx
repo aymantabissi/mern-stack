@@ -1,30 +1,28 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify"; 
-import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaStar, FaRegStar, FaStarHalfAlt, FaTruck, FaShieldAlt, FaHeart, FaPlus, FaMinus } from "react-icons/fa";
 
 function Details() {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState(null); // Initialize product as null
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState("");
+  const [recommendations, setRecommendations] = useState([]);
+  const navigate = useNavigate(); // Add navigate for routing
 
+  // Fetch product details
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/products/${id}`);
         setProduct(response.data);
-
-        // Set initial main image
-        const defaultImage = response.data.images?.[0] || response.data.image || "";
-        setMainImage(defaultImage);
+        setMainImage(response.data.image || "http://localhost:5000/uploads/default-image.jpg"); // Fallback image if product image is missing
       } catch (err) {
         toast.error("Product not found");
-        setError("Product not found");
       } finally {
         setLoading(false);
       }
@@ -32,8 +30,46 @@ function Details() {
     fetchProduct();
   }, [id]);
 
+  const handleBuyNow = () => {
+    // Navigate to checkout and pass the product data to the checkout page
+    navigate('/checkout', { state: { product } });
+  };
+
+  // Fetch recommendations based on the product category
+  useEffect(() => {
+    if (product?.category && product._id) {
+      setLoading(true);
+      const fetchRecommendations = async () => {
+        try {
+          const res = await axios.post("http://localhost:5001/recommendations", {
+            category: product.category,
+            product_id: product._id,
+          });
+          if (Array.isArray(res.data)) {
+            const updatedRecommendations = res.data.map((rec) => {
+              const fullImageUrl = rec.image
+                ? `${window.location.protocol}//${window.location.host}${rec.image}`  // Full URL for the image
+                : "http://localhost:5000/uploads/default-image.jpg";  // Default image URL for fallback
+              return { ...rec, image: fullImageUrl };
+            });
+            setRecommendations(updatedRecommendations);
+          } else {
+            setRecommendations([]);
+          }
+        } catch (error) {
+          console.error("Error fetching recommendations:", error);
+          toast.error("Error fetching recommendations.");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchRecommendations();
+    }
+  }, [product]);
+
+  // Early return while loading or if product is null
   if (loading) return <div className="flex justify-center items-center h-screen text-2xl text-gray-700">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
+  if (!product) return <div className="text-center text-red-500">Product not found</div>;
 
   const renderStars = (rating) => {
     const stars = [];
@@ -50,56 +86,52 @@ function Details() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
-      <div className="max-w-7xl w-full bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row">
-        
-        {/* Image Section */}
+    <div className="min-h-screen bg-gray-50 p-6 flex flex-col justify-center items-center">
+      <div className="max-w-7xl w-full bg-white shadow-xl rounded-lg p-6 flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6 mb-12">
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
-          {/* Thumbnails */}
           <div className="flex md:flex-col space-x-3 md:space-x-0 md:space-y-3">
-            {(product.images && product.images.length > 0 ? product.images.slice(0, 3) : [product.image]).map((img, idx) => (
-              <img
-                key={idx}
-                src={img}
-                alt={`Thumbnail ${idx}`}
-                className={`w-20 h-20 object-cover border rounded-md cursor-pointer ${mainImage === img ? 'border-red-500' : 'border-gray-300'}`}
-                onClick={() => setMainImage(img)}
-              />
-            ))}
+            {/* Check if product exists and has images before rendering */}
+            {product?.images && product.images.length > 0 ? 
+              product.images.slice(0, 3).map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt={`Thumbnail ${idx}`}
+                  className={`w-20 h-20 object-cover border rounded-md cursor-pointer transition-transform transform hover:scale-105 ${mainImage === img ? 'border-red-500' : 'border-gray-300'}`}
+                  onClick={() => setMainImage(img)}
+                />
+              )) : (
+                <img src={product?.image || "http://localhost:5000/uploads/default-image.jpg"} alt="Product" className="w-20 h-20 object-cover border rounded-md" />
+              )
+            }
           </div>
-
-          {/* Main Image */}
           <div className="flex-1">
             <img
-              src={mainImage}
-              alt={product.name}
-              className="w-full h-[400px] object-contain rounded-lg border"
+              src={mainImage || product?.image || "http://localhost:5000/uploads/default-image.jpg"}  // Fallback if no main image
+              alt={product?.name || "Product"}
+              className="w-full h-[500px] object-contain rounded-lg border shadow-lg hover:scale-105 transition-transform"
             />
           </div>
         </div>
 
-        {/* Product Details Section */}
         <div className="w-full md:w-1/2 p-6">
-          <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-
+          <h1 className="text-3xl font-extrabold text-gray-800">{product?.name}</h1>
           <div className="flex items-center space-x-2 mt-2">
-            {renderStars(product.rating)}
-            <span className="text-gray-500 text-sm">({product.reviews} reviews)</span>
+            {renderStars(product?.rating)}
+            <span className="text-gray-500 text-sm">({product?.reviews} reviews)</span>
           </div>
-
           <div className="mt-4 flex items-center space-x-3">
-            {product.discountPrice ? (
+            {product?.discountPrice ? (
               <>
-                <span className="text-3xl font-bold text-red-500">${product.discountPrice}</span>
-                <span className="text-gray-500 line-through">${product.price}</span>
-                <span className="bg-red-600 text-white px-2 py-1 text-xs rounded-md">-{product.discount}%</span>
+                <span className="text-3xl font-bold text-red-500">${product?.discountPrice}</span>
+                <span className="text-gray-500 line-through text-lg">${product?.price}</span>
+                <span className="bg-red-600 text-white px-2 py-1 text-xs rounded-md">-{product?.discount}%</span>
               </>
             ) : (
-              <span className="text-3xl font-bold text-gray-800">${product.price}</span>
+              <span className="text-3xl font-bold text-gray-800">${product?.price}</span>
             )}
           </div>
-
-          <p className="mt-4 text-gray-600">{product.description}</p>
+          <p className="mt-4 text-gray-600">{product?.description}</p>
 
           <div className="mt-4 flex items-center space-x-3">
             <span className="text-gray-600 font-semibold">Colours:</span>
@@ -137,11 +169,12 @@ function Details() {
           </div>
 
           <div className="flex space-x-4 mt-6">
-          <Link to="/checkout">
-  <button className="bg-orange-500 text-white px-6 py-3 rounded-md font-bold hover:bg-orange-600 transition duration-300">
-    Buy Now
-  </button>
-</Link>
+            <button
+              onClick={handleBuyNow}
+              className="bg-orange-500 text-white px-6 py-3 rounded-md font-bold hover:bg-orange-600 transition duration-300"
+            >
+              Buy Now
+            </button>
             <button className="bg-blue-500 text-white px-6 py-3 rounded-md font-bold flex items-center space-x-2 hover:bg-blue-600 transition duration-300">
               <FaShoppingCart />
               <span>Add to Cart</span>
@@ -163,6 +196,47 @@ function Details() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Recommendations Section */}
+      <div className="w-full max-w-6xl mt-10">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Related Items</h2>
+        {loading ? (
+          <p className="text-gray-600">Loading recommendations...</p>
+        ) : recommendations.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {recommendations.map((rec) => (
+              <div key={rec._id} className="bg-white border p-4 rounded-lg shadow-lg hover:shadow-xl transition">
+                {rec.discount && (
+                  <span className="bg-red-600 text-white px-2 py-1 text-xs rounded-md absolute top-2 right-2">
+                    -{rec.discount}%
+                  </span>
+                )}
+                <img
+                  src={rec.image || "http://localhost:5000/uploads/default-image.jpg"}
+                  alt={rec.name}
+                  className="h-40 w-full object-cover rounded mb-4"
+                />
+                <h3 className="font-semibold text-lg">{rec.name}</h3>
+                <div className="flex items-center space-x-2 mt-2">
+                  {renderStars(rec.rating)}
+                  <span className="text-gray-500 text-sm">({rec.reviews})</span>
+                </div>
+                <p className="font-bold text-blue-600 mt-2">
+                  ${rec.discountPrice || rec.price}
+                  {rec.discountPrice && (
+                    <span className="line-through text-gray-500 text-sm ml-2">${rec.price}</span>
+                  )}
+                </p>
+                <button className="bg-blue-500 text-white px-6 py-2 rounded-md font-bold mt-4 w-full hover:bg-blue-600 transition duration-300">
+                  Add to Cart
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-600">No related items found.</p>
+        )}
       </div>
     </div>
   );

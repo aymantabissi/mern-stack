@@ -1,5 +1,5 @@
 import express from "express";
-import upload from '../middlwares/uploads.js'// ✅ Correct import
+import upload from '../middlwares/uploads.js';
 import { 
   createProduct, 
   getProducts, 

@@ -10,13 +10,14 @@ function ProductCard({ product, userRole }) {
     ? `http://localhost:5000${product.image}`
     : product.image || "/path/to/default-image.jpg"; // Fallback to a default image if product.image is undefined or empty
 
-  const { deleteProduct, updateProduct, fetchProduct } = useProductStore();
+  const { deleteProduct, updateProduct } = useProductStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedProduct, setUpdatedProduct] = useState({
     name: product.name,
     price: product.price,
     image: product.image,
   });
+
   const location = useLocation();
   const { addToCart } = useCartStore();
 
@@ -65,7 +66,6 @@ function ProductCard({ product, userRole }) {
 
     // Notify the navbar to update cart count
     window.dispatchEvent(new Event("cartUpdated"));
-    fetchProduct();
     // Show notification
     toast.success("Produit ajouté au panier 🛒");
   };
@@ -99,7 +99,7 @@ function ProductCard({ product, userRole }) {
             <>
               <button
                 className="bg-green-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-600 hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
-                onClick={handleAddToCart}
+                onClick={handleAddToCart} // Only one button
               >
                 Ajouter au Panier
               </button>

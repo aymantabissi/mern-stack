@@ -33,9 +33,9 @@ function CreateProduct() {
       toast.error("Please fill all fields and select an image!");
       return;
     }
-
+  
     setLoading(true); // Show loading indicator
-
+  
     const formData = new FormData();
     formData.append("name", newProduct.name);
     formData.append("price", newProduct.price);
@@ -43,24 +43,35 @@ function CreateProduct() {
     formData.append("category", newProduct.category);
     formData.append("description", newProduct.description);
     formData.append("image", imageFile); // Add image file to the form data
-
-    const res = await fetch("/api/products", {
-      method: "POST",
-      body: formData, // Send as FormData, not JSON
-    });
-
-    const data = await res.json();
-
-    if (!data.success) {
-      toast.error(data.message || "Error creating product");
-    } else {
-      toast.success("Product created successfully!");
-      setTimeout(() => navigate("/Dashbard"), 2000);
+  
+    try {
+      const res = await fetch("/api/products", {
+        method: "POST",
+        body: formData, // Send as FormData, not JSON
+      });
+  
+      // Check if response is not a 2xx HTTP status code (successful)
+      if (!res.ok) {
+        const errorText = await res.text(); // Get error message (if any) from the response
+        throw new Error(errorText);
+      }
+  
+      const data = await res.json(); // Parse JSON response
+  
+      if (!data.success) {
+        toast.error(data.message || "Error creating product");
+      } else {
+        toast.success("Product created successfully!");
+        setTimeout(() => navigate("/Dashbord"), 2000);
+      }
+    } catch (error) {
+      console.error("Error while creating product:", error);
+      toast.error(error.message || "Error occurred while adding product");
     }
-
+  
     setLoading(false); // Hide loading indicator
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center">
       <ToastContainer position="top-right" autoClose={3000} />
